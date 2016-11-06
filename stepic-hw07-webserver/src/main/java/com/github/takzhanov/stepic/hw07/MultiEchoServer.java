@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 
 public class MultiEchoServer {
 
-    public static final int PORT = 5060;
+    public static final int PORT = 5050;
 
     public static void main(String[] args) throws IOException {
         System.out.println("Server started");
