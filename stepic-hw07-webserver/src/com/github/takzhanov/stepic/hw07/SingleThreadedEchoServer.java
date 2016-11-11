@@ -10,7 +10,7 @@ import static com.github.takzhanov.stepic.hw07.Constants.SERVER_MAX_LIFE_TIME;
 public class SingleThreadedEchoServer implements Runnable {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        SingleThreadedServer server = new SingleThreadedServer(SERVER_PORT);
+        SingleThreadedEchoServer server = new SingleThreadedEchoServer(SERVER_PORT);
         new Thread(server).start();
         Thread.sleep(SERVER_MAX_LIFE_TIME);
         server.stop();
@@ -26,7 +26,7 @@ public class SingleThreadedEchoServer implements Runnable {
 
     public void run() {
         openServerSocket();
-        System.out.println(String.format("Server Started on port %s", serverPort));
+        System.out.printf("Server Started on port: %d%n", serverPort);
         while (!isStopped()) {
             Socket clientSocket = null;
             try {
@@ -44,17 +44,20 @@ public class SingleThreadedEchoServer implements Runnable {
     }
 
     private void processClientRequest(Socket clientSocket) {
+        long startTime = System.currentTimeMillis();
+        System.out.printf("%s start processing new client request%n", Thread.currentThread());
         try (BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true)) {
-            long time = System.currentTimeMillis();
             String inputLine;
             while ((inputLine = input.readLine()) != null) {
+//                System.out.println(inputLine);
                 output.println(inputLine);
             }
-            System.out.println("Request processed: " + time);
         } catch (IOException e) {
-            throw new RuntimeException("Error processing client request");
+            throw new RuntimeException("Error processing client request", e);
         }
+        long finishTime = System.currentTimeMillis();
+        System.out.printf("%s finish processing client request: %ss%n", Thread.currentThread(), (finishTime - startTime) / 1000f);
     }
 
     private boolean isStopped() {
