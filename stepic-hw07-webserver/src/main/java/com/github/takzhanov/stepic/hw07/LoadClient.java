@@ -1,11 +1,12 @@
 package com.github.takzhanov.stepic.hw07;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import static com.github.takzhanov.stepic.hw07.Constants.*;
-import static com.github.takzhanov.stepic.hw07.Constants.K_OF_LOAD;
-import static com.github.takzhanov.stepic.hw07.Constants.SERVER_PORT;
 
 public class LoadClient {
 

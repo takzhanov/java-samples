@@ -1,29 +1,30 @@
 package com.github.takzhanov.stepic.hw07;
 
-import java.io.*;
-import java.net.ServerSocket;
+import java.io.IOException;
 import java.net.Socket;
 
-import static com.github.takzhanov.stepic.hw07.Constants.SERVER_PORT;
 import static com.github.takzhanov.stepic.hw07.Constants.SERVER_MAX_LIFE_TIME;
+import static com.github.takzhanov.stepic.hw07.Constants.SERVER_PORT;
 
-public class SingleThreadedEchoServer extends EchoServer {
+public class MultiThreadedEchoServer extends EchoServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        SingleThreadedEchoServer server = new SingleThreadedEchoServer(SERVER_PORT);
+        MultiThreadedEchoServer server = new MultiThreadedEchoServer(SERVER_PORT);
         new Thread(server).start();
+        Thread.sleep(100);
+        System.out.println("Server started");//для теста
         Thread.sleep(SERVER_MAX_LIFE_TIME);
         server.stop();
     }
 
-    public SingleThreadedEchoServer(int port) {
+    public MultiThreadedEchoServer(int port) {
         super(port);
     }
 
     @Override
     public void run() {
         openServerSocket();
-        System.out.printf("Server Started on port: %d%n", serverPort);
+        System.out.printf("ServerThread Started on port: %d%n", serverPort);
         while (!isStopped()) {
             Socket clientSocket = null;
             try {
@@ -35,7 +36,10 @@ public class SingleThreadedEchoServer extends EchoServer {
                 }
                 throw new RuntimeException("Error accepting client connection", e);
             }
-            processClientRequest(clientSocket);
+            Socket finalClientSocket = clientSocket;
+            new Thread(()-> {
+                processClientRequest(finalClientSocket);
+            }).start();
         }
         System.out.println("Server Stopped");
     }
