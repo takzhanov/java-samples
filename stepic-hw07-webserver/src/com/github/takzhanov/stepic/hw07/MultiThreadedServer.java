@@ -1,48 +1,49 @@
 package com.github.takzhanov.stepic.hw07;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class MultiThreadedServer implements Runnable {
+import static com.github.takzhanov.stepic.hw07.Constants.SERVER_MAX_LIFE_TIME;
+import static com.github.takzhanov.stepic.hw07.Constants.SERVER_PORT;
 
-    private final int serverPort;
-    private volatile boolean isStopped = false;
-    private ServerSocket serverSocket;
+public class MultiThreadedServer  extends EchoServer {
 
-    public MultiThreadedServer(int serverPort) {
-        this.serverPort = serverPort;
+    public static void main(String[] args) throws IOException, InterruptedException {
+        MultiThreadedServer server = new MultiThreadedServer(SERVER_PORT);
+        new Thread(server).start();
+        Thread.sleep(SERVER_MAX_LIFE_TIME);
+        server.stop();
+    }
+
+    public MultiThreadedServer(int port) {
+        super(port);
     }
 
     @Override
     public void run() {
-//        openServerSocket();
-////        System.out.println("Server started");
-////        Long start = System.currentTimeMillis();
-//        while (!isStopped()) {
-//            try (Socket clientSocket = serverSocket.accept()) {
-//                new SocketProcessor(serverSocket.accept()).start();
-//            } catch (IOException e) {
-//                if (isStopped) {
-//
-//                }
-//            } fi
-//            System.out.println("New thread started");
-//        }
-//        System.out.println("Timeout");
-//        ss.close();
-    }
-
-    private synchronized void openServerSocket() {
-
-    }
-
-    public synchronized void stop() {
-        this.isStopped = true;
-        try {
-            this.serverSocket.close();
-        }catch (IOException e) {
-
+        openServerSocket();
+        System.out.printf("Server Started on port: %d%n", serverPort);
+        while (!isStopped()) {
+            Socket clientSocket = null;
+            try {
+                clientSocket = this.serverSocket.accept();
+            } catch (IOException e) {
+                if (isStopped()) {
+                    System.out.println("Server Stopped");
+                    return;
+                }
+                throw new RuntimeException("Error accepting client connection", e);
+            }
+            Socket finalClientSocket = clientSocket;
+            new Thread(()-> {
+                processClientRequest(finalClientSocket);
+            }).start();
         }
+        System.out.println("Server Stopped");
     }
+
 }
