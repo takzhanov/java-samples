@@ -24,15 +24,9 @@ public class SingleThreadedEchoServer extends EchoServer {
         openServerSocket();
         System.out.printf("ServerThread Started on port: %d%n", serverPort);
         while (!isStopped()) {
-            Socket clientSocket = null;
-            try {
-                clientSocket = this.serverSocket.accept();
-            } catch (IOException e) {
-                if (isStopped()) {
-                    System.out.println("Server Stopped");
-                    return;
-                }
-                throw new RuntimeException("Error accepting client connection", e);
+            Socket clientSocket = acceptClientSocket();
+            if (clientSocket == null) {
+                return;
             }
             processClientRequest(clientSocket);
         }

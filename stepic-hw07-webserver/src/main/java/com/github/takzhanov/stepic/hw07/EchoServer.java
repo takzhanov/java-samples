@@ -10,7 +10,7 @@ import java.net.Socket;
 
 public abstract class EchoServer implements Runnable {
     protected int serverPort;
-    protected ServerSocket serverSocket = null;
+    private ServerSocket serverSocket = null;
     private boolean isStopped = false;
 
     public EchoServer(int port) {
@@ -54,6 +54,18 @@ public abstract class EchoServer implements Runnable {
             this.serverSocket = new ServerSocket(this.serverPort);
         } catch (IOException e) {
             throw new RuntimeException(String.format("Cannot open port %s", serverPort), e);
+        }
+    }
+
+    protected Socket acceptClientSocket() {
+        try {
+            return this.serverSocket.accept();
+        } catch (IOException e) {
+            if (isStopped()) {
+                System.out.println("Server Stopped");
+                return null;
+            }
+            throw new RuntimeException("Error accepting client connection", e);
         }
     }
 }
