@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import static com.github.takzhanov.stepic.hw07.MultiEchoServer.PORT;
+import static com.github.takzhanov.stepic.hw07.Constants.SERVER_PORT;
 
 public class MultiClient {
 
@@ -15,7 +15,7 @@ public class MultiClient {
         for (int i = 0; i < K_OF_LOAD; i++) {
             new Thread(() -> {
                 try {
-                    Socket socket = new Socket("localhost", PORT);
+                    Socket socket = new Socket("localhost", SERVER_PORT);
                     DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
                     int i1 = 0;
                     while (i1 < 5000) {
