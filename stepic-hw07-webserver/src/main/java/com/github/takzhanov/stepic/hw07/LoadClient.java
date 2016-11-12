@@ -11,7 +11,7 @@ import static com.github.takzhanov.stepic.hw07.Constants.*;
 public class LoadClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        for (int i = 0; i < CLIENTS; i++) {
+        for (int i = 0; i < N_CLIENT; i++) {
             new Thread(() -> {
                 long startTime = System.currentTimeMillis();
                 try (Socket socket = new Socket("localhost", SERVER_PORT);

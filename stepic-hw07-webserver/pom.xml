@@ -27,7 +27,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.takzhanov.stepic.hw07.MultiThreadedEchoServer</mainClass>
+                            <mainClass>com.github.takzhanov.stepic.hw07.MultiThreadedServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

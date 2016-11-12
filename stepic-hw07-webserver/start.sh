@@ -5,3 +5,8 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 #так запускает тестер
 java -jar server.jar
+
+#так можно запускать сервер и клиент в консоли сразу
+#java -cp server.jar com.github.takzhanov.stepic.hw07.MultiThreadedServer &
+#java -cp server.jar com.github.takzhanov.stepic.hw07.LoadClient
+
